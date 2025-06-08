@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  oracle:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    container_name: oracle_biosentinela
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      - ORACLE_PWD=MyOraclePassword123
+    volumes:
+      - dados_oracle:/opt/oracle/oradata
+    networks:
+      - appnet
+    restart: always
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dotnet_biosentinela
+    ports:
+      - "8080:8080"
+    environment:
+    - ConnectionStrings__Oracle=Data Source=oracle:1521/XEPDB1;User ID=RM558834;Password=080401;
+    depends_on:
+      - oracle
+    networks:
+      - appnet
+    restart: always
+
+volumes:
+  dados_oracle:
+
+networks:
+  appnet:
+

@@ -1,0 +1,6 @@
+@BioSentinela___.NET_HostAddress = http://localhost:5264
+
+GET {{BioSentinela___.NET_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
