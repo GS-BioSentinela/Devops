@@ -44,28 +44,28 @@ O BioSentinela tem como missão auxiliar na preservação ambiental, monitorando
 
 ### Passos:
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/GS-BioSentinela/BioSentinela---.NET.git
-    ```
+### 1. Clone o repositório:
 
-2. Configure a string de coexão no arquivo appsettings.json:
-  ```json
-    "ConnectionStrings": {
-    "DefaultConnection": "User Id=USUARIO;Password=SENHA;Data Source=localhost:1521/XEPDB1"
-    }
-  ```
+```bash
+git clone https://github.com/GS-BioSentinela/BioSentinela---.NET.git
+cd BioSentinela---.NET
 
-3. Execute as migrations e atualize o banco:
-  ```bash
-    Update-Databese
-  ```
+### 2. Configure a string de conexão
+Edite o appsettings.json dentro do projeto:
 
-4. Rode o projeto:
-  ```bash
-  dotnet run
-  ```
-5. Acesse a documentação da API:
+"ConnectionStrings": {
+  "Oracle": "Data Source=oracle_biosentinela:1521/XEPDB1;User ID=MYUSER;Password=MYPASSWORD"
+}
+Obs: Use o mesmo usuário e senha definidos no Dockerfile do Oracle.
+
+### 3. Suba os containers com Docker Compose:
+docker compose up -d --build
+
+### 4. Acompanhe os logs dos containers:
+docker logs -f oracle_biosentinela
+docker logs -f dotnet_biosentinela
+
+### 5. Acesse a documentação da API:
   - Swagger UI: http://localhost:5264/swagger
 
 ---
