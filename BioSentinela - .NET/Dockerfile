@@ -1,24 +1,31 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
+# Etapa base para runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+# Etapa de build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["BioSentinela - .NET/BioSentinela - .NET.csproj", "BioSentinela - .NET/"]
-RUN dotnet restore "./BioSentinela - .NET/BioSentinela - .NET.csproj"
-COPY . .
-WORKDIR "/src/BioSentinela - .NET"
-RUN dotnet build "./BioSentinela - .NET.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+# Copia somente o csproj para restaurar dependências
+COPY ["BioSentinela - .NET.csproj", "./"]
+
+RUN dotnet restore "BioSentinela - .NET.csproj"
+
+# Copia todo o código para a imagem
+COPY . .
+
+# Build da aplicação
+RUN dotnet build "BioSentinela - .NET.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# Publica a aplicação
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./BioSentinela - .NET.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "BioSentinela - .NET.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# Imagem final
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
