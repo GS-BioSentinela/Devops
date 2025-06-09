@@ -3,7 +3,7 @@ version: '3.9'
 services:
   oracle:
     build:
-      context: ./db
+      context: ./BioSentinela - .NET/db
       dockerfile: Dockerfile
     container_name: oracle_biosentinela
     ports:
@@ -19,13 +19,13 @@ services:
 
   app:
     build:
-      context: .
+      context: ./BioSentinela - .NET
       dockerfile: Dockerfile
     container_name: dotnet_biosentinela
     ports:
       - "8080:8080"
     environment:
-    - ConnectionStrings__Oracle=Data Source=oracle:1521/XEPDB1;User ID=RM558834;Password=080401;
+      - ConnectionStrings__Oracle=Data Source=oracle:1521/XEPDB1;User ID=RM558834;Password=MyOraclePassword123;
     depends_on:
       - oracle
     networks:
@@ -37,4 +37,3 @@ volumes:
 
 networks:
   appnet:
-
