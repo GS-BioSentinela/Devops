@@ -31,7 +31,17 @@ builder.Services.AddSwaggerGen(swagger =>
 
 builder.Services.AddDbContext<BioContext>(options =>
 {
-    options.UseOracle(builder.Configuration.GetConnectionString("Oracle"));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("SqlServer"),
+        sqlOptions =>
+        {
+            // Habilita política de resiliência
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 2,              // quantas vezes tentar
+                maxRetryDelay: TimeSpan.FromSeconds(5), // tempo entre tentativas
+                errorNumbersToAdd: null        // pode filtrar por códigos de erro específicos
+            );
+        });
 });
 
 builder.Services.AddScoped<IRepository<Usuario>, Repository<Usuario>>();
